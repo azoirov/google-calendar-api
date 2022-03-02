@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="/public/styles.css" />
+    </head>
+    <body>
+        <script src="https://apis.google.com/js/api.js"></script>
+        <script>
+            const client_id = `648863973313-qjl5r89vb1ks6u0b8bouv0crv7043lqh`;
+            const api_key = `AIzaSyDxkyR754kwNOqGBkqsO6vx1Rt1ioBVS9c`;
+            let color = ``;
+            /**
+             * Sample JavaScript code for calendar.events.list
+             * See instructions for running APIs Explorer code samples locally:
+             * https://developers.google.com/explorer-help/code-samples#javascript
+             */
+            async function renderEvents(events) {
+                let eventList = document.querySelector("#events");
+                eventList.innerHTML = ``;
+                events.forEach(async (event) => {
+                    let colored = event.colorId ? true : false;
+                    if (colored) {
+                        color = await getColor(event.colorId);
+                    }
+                    let eventElement = `<li class="event">
+                        <div class="event-header">
+                            <span class="event-color" style="background-color: ${
+                                colored ? color : "#fff"
+                            }"></span>
+                            <div class="">
+                                <h2>${event.summary}</h2>
+                                <p>${new Date(
+                                    event.start.dateTime
+                                ).toDateString()},⋅${new Date(
+                        event.start.dateTime
+                    ).toLocaleTimeString()} – ${new Date(
+                        event.end.dateTime
+                    ).toLocaleTimeString()}</p>
+                            </div>
+                        </div>
+                    </li>`;
+                    eventList.innerHTML += eventElement;
+                });
+            }
+            async function getColor(colorId) {
+                let response = await gapi.client.calendar.colors.get({});
+                console.log(response.result);
+                return response.result.event[colorId].background;
+            }
+            function NoEvents() {}
+            function authenticate() {
+                return gapi.auth2
+                    .getAuthInstance()
+                    .signIn({
+                        scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.events.readonly https://www.googleapis.com/auth/calendar.readonly",
+                    })
+                    .then(
+                        function (result) {
+                            console.log(result);
+                            console.log("Sign-in successful");
+                        },
+                        function (err) {
+                            console.error("Error signing in", err);
+                        }
+                    );
+            }
+            function loadClient() {
+                gapi.client.setApiKey(api_key);
+                document.querySelector("#events").innerHTML = ``;
+                return gapi.client
+                    .load(
+                        "https://content.googleapis.com/discovery/v1/apis/calendar/v3/rest"
+                    )
+                    .then(
+                        function () {
+                            console.log("GAPI client loaded for API");
+                        },
+                        function (err) {
+                            console.error(
+                                "Error loading GAPI client for API",
+                                err
+                            );
+                        }
+                    );
+            }
+            // Make sure the client is loaded and sign-in is complete before calling this method.
+            function execute() {
+                if (!gapi.client.calendar) {
+                    alert(
+                        `You must be authorized to see envents!\nPlease Sign in :)`
+                    );
+                }
+                return gapi.client.calendar.events
+                    .list({
+                        calendarId: "primary",
+                    })
+                    .then(
+                        function (response) {
+                            // Handle the results here (response.result has the parsed body).
+                            if (response.result.items.length) {
+                                document.querySelector(
+                                    "#eventsTitle"
+                                ).textContent = "Events";
+                                renderEvents(response.result.items);
+                            } else {
+                                document.querySelector(
+                                    "#eventsTitle"
+                                ).textContent = "No Events";
+                            }
+                        },
+                        function (err) {
+                            console.log("err", err);
+                        }
+                    );
+            }
+            gapi.load("client:auth2", function () {
+                gapi.auth2.init({ client_id: client_id });
+            });
+        </script>
+        <div class="container">
+            <div class="btns-header">
+                <%- include("./google-sign-in-btn") %>
+                <button class="get-events" onclick="execute()">
+                    Get Events
+                </button>
+            </div>
+            <div class="events">
+                <h1 id="eventsTitle"></h1>
+                <ul id="events"></ul>
+            </div>
+        </div>
+    </body>
+</html>

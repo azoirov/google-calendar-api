@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.container {
+    width: 80%;
+    margin: 50px auto;
+}
+
+.btns-header {
+    justify-content: center;
+    display: flex;
+}
+
+button.get-events {
+    padding: 10px 20px;
+    font-size: 17px;
+    background-color: #fff;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid rgb(12, 134, 165);
+}
+
+button.sign-in {
+    background-color: #fff;
+    border: 1px solid rgb(12, 134, 165);
+    outline: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-size: 17px;
+    width: 150px;
+    cursor: pointer;
+    color: rgb(184, 25, 25);
+    font-weight: bold;
+}
+
+button.sign-in img {
+    height: 30px;
+}
+
+.events {
+    margin-top: 25px;
+}
+
+.events h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.events ul {
+    display: flex;
+    flex-direction: column;
+}
+.event {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.event .event-header {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.event .event-header span {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    margin-right: 20px;
+    border: 1px solid #ccc;
+}
+
+.event .event-reminder {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.event .event-reminder img.bell-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+}
